@@ -16,8 +16,8 @@ class DB2Fog
     store.store(most_recent_dump_file_name, file_name)
   end
 
-  def restore
-    dump_file_name = store.fetch(most_recent_dump_file_name).read
+  def restore(environment = nil)
+    dump_file_name = store.fetch(most_recent_dump_file_name(environment)).read
     file = store.fetch(dump_file_name)
     database.restore(file.path)
   end
@@ -61,8 +61,14 @@ class DB2Fog
     @store ||= FogStore.new
   end
 
-  def most_recent_dump_file_name
-    "most-recent-dump-#{db_credentials[:database]}.txt"
+  def most_recent_dump_file_name(environment = nil)
+    if environment
+      raise "Unknown environment name (#{environment}). Check your database.yml" if Rails.configuration.database_configuration[environment].nil?
+      db_name = Rails.configuration.database_configuration[environment]['database']
+    else
+      db_name = db_credentials[:database]
+    end
+    "most-recent-dump-#{db_name}.txt"
   end
 
   def db_credentials
