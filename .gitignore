@@ -2,3 +2,4 @@ Gemfile.lock
 spec/db_config.rb
 spec/storage
 pkg
+.rspec
