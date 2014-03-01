@@ -1,7 +1,5 @@
-require "rubygems"
-require "bundler"
-Bundler.setup
-
+require 'rubygems'
+require 'bundler/setup'
 require 'rspec'
 require 'fileutils'
 require 'timecop'
