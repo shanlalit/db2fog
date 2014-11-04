@@ -104,7 +104,7 @@ class DB2Fog
     end
 
     def dump
-      dump_file = Tempfile.new("dump")
+      dump_file = Tempfile.new("dump", DB2Fog.config[:local_dir])
       run(dump_command(dump_file))
       dump_file.path
     end
