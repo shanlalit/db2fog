@@ -138,7 +138,7 @@ class DB2Fog
   class PsqlAdaptor < BaseAdaptor
 
     def dump_command(dump_file)
-      cmd = "pg_dump --clean --format=p --compress=9 #{pg_dump_options}"
+      cmd = "pg_dump --clean --format=p --compress=1 #{pg_dump_options}"
       cmd += " > #{dump_file.path}"
     end
 
