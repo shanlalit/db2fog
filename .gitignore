@@ -1,5 +1,11 @@
+/.bundle/
 Gemfile.lock
 spec/db_config.rb
 spec/storage
-pkg
-.rspec
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/.yardoc
