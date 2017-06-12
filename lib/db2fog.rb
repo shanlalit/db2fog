@@ -5,6 +5,7 @@ require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/hash/except'
 require 'fog'
 require 'tempfile'
+require 'fileutils'
 require 'db2fog/railtie'
 
 class DB2Fog
@@ -12,8 +13,11 @@ class DB2Fog
 
   def backup
     file_name = "dump-#{db_credentials[:database]}-#{Time.now.utc.strftime("%Y%m%d%H%M")}.sql.gz"
-    store.store(file_name, open(database.dump))
+    local_dump_path = database.dump
+    store.store(file_name, open(local_dump_path))
     store.store(most_recent_dump_file_name, file_name)
+  ensure
+    FileUtils.rm(local_dump_path) if File.exists?(local_dump_path)
   end
 
   def restore(environment = nil)
