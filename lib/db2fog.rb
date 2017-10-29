@@ -109,8 +109,13 @@ class DB2Fog
 
     def dump
       dump_file = Tempfile.new("dump", DB2Fog.config[:local_dir])
+      dump_file.close
       run(dump_command(dump_file))
       dump_file.path
+    rescue
+      # Ensure a failed dump removes a partially complete dump file
+      FileUtils.rm_f dump_file.path
+      raise
     end
 
   end
