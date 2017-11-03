@@ -108,7 +108,17 @@ class DB2Fog
     end
 
     def dump
-      dump_file = Tempfile.new("dump", DB2Fog.config[:local_dir])
+      dump_file = Tempfile.new(tempfile_prefix, DB2Fog.config[:local_dir])
+
+      # Remove old dump files.
+      # Not sure why they are being left behind... but they eventually use up all the disk space.
+      other_dump_files = Dir.glob("#{File.dirname(dump_file.path)}/#{tempfile_prefix}*")
+      other_dump_files.each do |file|
+        if File.mtime(file) < 1.day.ago
+          FileUtils.rm_f file
+        end
+      end
+
       dump_file.close
       run(dump_command(dump_file))
       dump_file.path
@@ -116,6 +126,10 @@ class DB2Fog
       # Ensure a failed dump removes a partially complete dump file
       FileUtils.rm_f dump_file.path
       raise
+    end
+
+    def tempfile_prefix
+      Digest::MD5.hexdigest("dump#{@credentials[:database]}/#{@credentials[:username]}/#{@credentials[:password]}")
     end
 
   end
