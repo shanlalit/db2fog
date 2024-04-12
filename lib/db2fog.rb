@@ -17,7 +17,7 @@ class DB2Fog
     store.store(file_name, open(local_dump_path))
     store.store(most_recent_dump_file_name, file_name)
   ensure
-    FileUtils.rm(local_dump_path) if File.exists?(local_dump_path)
+    FileUtils.rm(local_dump_path) if File.exist?(local_dump_path)
   end
 
   def restore(environment = nil)
